@@ -1,34 +1,32 @@
-import { 
-  test, 
-  expect 
-} from '@playwright/test';
+import { test, expect, Page } from "@playwright/test";
 
-test('Invalid Login Check', 
-async ({ page }) => {
+// Inline minimal LoginPage to avoid external module import error
+class LoginPage {
+  readonly page: Page;
+  constructor(page: Page) {
+    this.page = page;
+  }
 
-  // 1. Open a practice site
-  await page.goto(
-    'https://the-internet.herokuapp.com/login'
-  );
+  async goto() {
+    await this.page.goto('/login');
+  }
 
-  // 2. Type test data
-  await page.getByLabel('Username')
-    .fill('wrong_user');
+  async login(username: string, password: string) {
+    await this.page.fill('#username', username);
+    await this.page.fill('#password', password);
+    await this.page.click('button[type="submit"]');
+  }
 
-  await page.getByLabel('Password')
-    .fill('wrong_password');
+  get flashMessage() {
+    return this.page.locator('.flash, .flash-message, #flash');
+  }
+}
 
-  // 3. Click Login
-  await page.locator('button', { 
-    hasText: 'Login' 
-  }).click();
+test("Invalid Login Check", async ({ page }) => {
+  const loginPage = new LoginPage(page);
 
-  // 4. Assert error message
-  let errorFlash = page
-    .locator('#flash');
+  await loginPage.goto();
+  await loginPage.login("wrong_user", "wrong_password");
 
-  await expect(errorFlash)
-    .toBeVisible();
-
+  await expect(loginPage.flashMessage).toBeVisible();
 });
-
