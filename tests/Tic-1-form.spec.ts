@@ -12,9 +12,14 @@ test("should validate contact form fields and toggle errors dynamically", async 
   const emailInput = page.locator("#email");
   const subjectSelect = page.locator("#subject");
   const messageInput = page.locator("#message");
-  const submitBtn = page.locator('[data-test="contact-submit"]');
 
-  // 2. TODO: Verify the submit button is initially disabled (use .toBeDisabled())
+  // make the submit locator resilient: prefer data-test, fall back to button[type=submit] or button text
+  const submitBtn = page.locator('[data-test="contact-submit"], button[type="submit"], text=Submit');
+
+  // wait for the form/submit to be attached/visible to avoid "element(s) not found"
+  await submitBtn.waitFor({ state: "attached", timeout: 10_000 });
+
+  // 2. Verify the submit button is initially disabled
   await expect(submitBtn).toBeDisabled();
 
   // 3. TODO: Click into the First Name field, clear it, and blur (click outside)
