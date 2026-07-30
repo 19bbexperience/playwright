@@ -3,16 +3,25 @@ import { test, expect } from "@playwright/test";
 test("should interact with the contact form fields reliably", async ({
   page,
 }) => {
-  await page.goto("https://practicesoftwaretesting.com/contact");
+  await page.goto("https://practicesoftwaretesting.com/contact", {
+    waitUntil: "domcontentloaded",
+    timeout: 30_000,
+  });
 
   const firstNameInput = page.locator("#first_name");
   const lastNameInput = page.locator("#last_name");
   const emailInput = page.locator("#email");
   const subjectSelect = page.locator("#subject");
   const messageInput = page.locator("#message");
-  const submitBtn = page.locator('[data-test="contact-submit"], button[type="submit"], text=Submit');
+  const submitBtn = page.locator('[data-test="contact-submit"]');
 
-  await submitBtn.waitFor({ state: "attached", timeout: 10_000 });
+  await page.waitForLoadState("networkidle", { timeout: 30_000 }).catch(() => {});
+  await expect(firstNameInput).toBeVisible({ timeout: 15_000 });
+  await expect(lastNameInput).toBeVisible({ timeout: 15_000 });
+  await expect(emailInput).toBeVisible({ timeout: 15_000 });
+  await expect(subjectSelect).toBeVisible({ timeout: 15_000 });
+  await expect(messageInput).toBeVisible({ timeout: 15_000 });
+  await expect(submitBtn).toBeVisible({ timeout: 15_000 });
 
   await expect(firstNameInput).toBeVisible();
   await expect(lastNameInput).toBeVisible();
