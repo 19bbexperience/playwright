@@ -30,5 +30,21 @@ export class FormPage {
     await this.contactNumberInput.fill(phoneNumber);
     await this.submitButton.click();
   }
+    
+   // 1. Navigate directly to the login page
+  async navigateToForgotPassword() {
+    await this.page.goto('https://practicetestautomation.com/practice-test-login/'); 
+  }
+
+  // 2. Click submit without typing anything to trigger the validation check
+  async triggerBlankValidationError() {
+    await this.page.getByRole('button', { name: 'Submit' }).click();
+  }
+
+  // 3. Define the locator for the specific error link asked for in the ticket
+  getPasswordErrorLink() {
+    return this.page.locator('#error'); 
+  
+  }
 }
 
