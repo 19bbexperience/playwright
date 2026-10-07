@@ -1,0 +1,15 @@
+[
+  {
+    "username": "invalidUserOne",
+    "password": "Password123"
+  },
+  {
+    "username": "student",
+    "password": "incorrectPassword"
+  },
+  {
+    "username": "wrongEmail@test.com",
+    "password": "wrongPassword"
+  }
+]
+

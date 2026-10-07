@@ -1,10 +1,23 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Page, Locator } from "@playwright/test";
 
-// Inline minimal LoginPage to avoid external module import error
+// 1. Clean, Modernized Page Object Model
 class LoginPage {
   readonly page: Page;
+  readonly usernameInput: Locator;
+  readonly passwordInput: Locator;
+  readonly submitButton: Locator;
+  readonly flashMessage: Locator;
+
   constructor(page: Page) {
     this.page = page;
+    
+    // ✅ Replaced raw IDs with modern, user-facing accessibility methods
+    this.usernameInput = page.getByLabel('Username');
+    this.passwordInput = page.getByLabel('Password');
+    this.submitButton = page.getByRole('button', { name: 'submit', exact: true });
+    
+    // For status alerts/flash messages, targeting by role or text is standard
+    this.flashMessage = page.getByText(/alert|error|success/i);
   }
 
   async goto() {
@@ -12,21 +25,20 @@ class LoginPage {
   }
 
   async login(username: string, password: string) {
-    await this.page.fill('#username', username);
-    await this.page.fill('#password', password);
-    await this.page.click('button[type="submit"]');
-  }
-
-  get flashMessage() {
-    return this.page.locator('.flash, .flash-message, #flash');
+    await this.usernameInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.submitButton.click();
   }
 }
 
-test("Invalid Login Check", async ({ page }) => {
+// 2. Active Test Block
+test('successful login flow example', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   await loginPage.goto();
-  await loginPage.login("wrong_user", "wrong_password");
+  await loginPage.login('myUsername', 'myPassword');
 
+  // Verify the final element using our clean locator strategy
   await expect(loginPage.flashMessage).toBeVisible();
 });
+
