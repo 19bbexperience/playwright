@@ -8,6 +8,8 @@ A production-grade, enterprise-ready E2E test automation framework built using *
 
 * **Strict Zero-CSS Locators:** Elements are located exclusively via user-centric accessibility roles (`getByRole`, `getByLabel`, `getByText`). No raw CSS classes or brittle XPaths are used, ensuring tests mirror real user behavior and withstand layout redesigns.
 * **Page Object Model (POM):** Scalable separation of concerns. Page structures, fields, and action mechanics are isolated within clean class files under `Pages/`, keeping test scripts clean and declarative.
+* **Data-Driven Testing (DDT):** Utilizes an independent JSON data schema to loop multiple credential variations through a single test engine.
+* **Visual Regression Assurances:** Pixel-by-pixel layout checking via baseline snapshot comparisons across distinct engines.
 * **CI/CD Cloud Automation:** Fully integrated with GitHub Actions. Every push or pull request automatically triggers a headless test run across multiple browser engines inside an isolated Linux runner environment.
 * **Flakiness Mitigation:** Configured with robust action timeouts, automatic retries, and comprehensive post-failure artifact gathering (Traces, Screenshots, Videos) for elite root-cause debugging.
 
